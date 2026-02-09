@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <style>
+        body { font-family: sans-serif; background: #000; color: #fff; text-align: center; margin: 0; padding-bottom: 50px; -webkit-tap-highlight-color: transparent; }
+        .header { background: #1a1a1a; padding: 15px; border-bottom: 2px solid #333; }
+        #grade { font-size: 70px; font-weight: bold; color: orange; margin: 0; line-height: 1; }
+        #pt-subtitle { font-size: 18px; color: #ff9500; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
+
+        .stat-bar { display: grid; grid-template-columns: repeat(6, 1fr); background: #222; margin: 10px; padding: 10px; border-radius: 10px; font-size: 9px; }
+        .stat-val { font-size: 16px; font-weight: bold; display: block; color: #007aff; }
+        #ft-display { grid-column: span 6; color: #34c759; font-weight: bold; padding-top: 8px; border-top: 1px solid #333; margin-top: 8px; font-size: 10px; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+        button { padding: 20px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 14px; background: #444; cursor: pointer; }
+        button:active { opacity: 0.5; transform: scale(0.95); }
+
+        .btn-green { background: #34c759; }
+        .btn-blue { background: #007aff; }
+        .btn-red { background: #ff3b30; }
+        .btn-purple { background: #5856d6; }
+        
+        #paint-touch { 
+            width: calc(100% - 20px); height: 140px; margin: 10px; 
+            background: #ff9500; color: #000; font-size: 24px; font-weight: bold;
+        }
+
+        .flash-white { background: #fff !important; color: #000 !important; }
+        .history { text-align: left; padding: 15px; background: #111; margin-top: 20px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div id="grade">D</div>
+        <div id="pt-subtitle">PAINT TOUCHES: 0</div>
+    </div>
+
+    <div class="stat-bar">
+        <div>PTS<span id="s-pts" class="stat-val">0</span></div>
+        <div>AST<span id="s-ast" class="stat-val">0</span></div>
+        <div>REB<span id="s-reb" class="stat-val">0</span></div>
+        <div>STL<span id="s-stl" class="stat-val">0</span></div>
+        <div>BLK<span id="s-blk" class="stat-val">0</span></div>
+        <div>TO<span id="s-to" class="stat-val">0</span></div>
+        <div id="ft-display">Free Throw: 0% (0/0)</div>
+    </div>
+
+    <div class="grid">
+        <button class="btn-green" onclick="handle('2made', 2, 2)">2PT MADE</button>
+        <button class="btn-gray" onclick="handle('2miss', 0, -2)">2PT MISS</button>
+        
+        <button class="btn-green" onclick="handle('3made', 3, 3)">3PT MADE</button>
+        <button class="btn-gray" onclick="handle('3miss', 0, -3)">3PT MISS</button>
+
+        <button class="btn-purple" onclick="handle('ft-m', 1, 1)">FT MADE</button>
+        <button class="btn-gray" onclick="handle('ft-x', 0, -1)">FT MISS</button>
+
+        <button class="btn-blue" onclick="handle('ast', 0, 5)">ASSIST</button>
+        <button class="btn-blue" onclick="handle('stl', 0, 3)">STEAL</button>
+        <button class="btn-blue" onclick="handle('reb', 0, 3)">REBOUND</button>
+        <button class="btn-blue" onclick="handle('blk', 0, 3)">BLOCK</button>
+        <button class="btn-red" style="grid-column: span 2;" onclick="handle('to', 0, -10)">TURNOVER</button>
+    </div>
+
+    <button id="paint-touch" onclick="handle('pt', 0, 10)">
+        <span id="pt-num" style="font-size: 40px; display: block;">0</span>
+        PAINT TOUCHES
+    </button>
+
+    <div style="display: flex; gap: 10px; padding: 10px;">
+        <button style="flex:1; background:#444;" onclick="undo()">UNDO</button>
+        <button style="flex:1; background: #34c759; color: #000;" onclick="save()">SAVE GAME</button>
+        <button style="flex:1; background:#444;" onclick="reset()">RESET</button>
+    </div>
+
+    <div class="history">
+        <div style="color: orange; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px;">Season History</div>
+        <div id="h-list" style="font-size: 12px; padding-top: 10px;"></div>
+    </div>
+
+    <script>
+        var data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0 };
+        var raw = 0;
+        var stack = [];
+
+        function handle(type, ptVal, gradeVal) {
+            stack.push({t: type, p: ptVal, g: gradeVal});
+            raw += gradeVal;
+            data.pts += ptVal;
+
+            if (type === 'pt') data.pt++;
+            if (type === 'ast') data.ast++;
+            if (type === 'reb') data.reb++;
+            if (type === 'stl') data.stl++;
+            if (type === 'blk') data.blk++;
+            if (type === 'to') data.to++;
+            if (type === 'ft-m') { data.ftm++; data.fta++; }
+            if (type === 'ft-x') { data.fta++; }
+
+            if (type === 'pt') flash('paint-touch');
+            
+            refresh();
+        }
+
+        function undo() {
+            if (stack.length === 0) return;
+            var item = stack.pop();
+            raw -= item.g;
+            data.pts -= item.p;
+
+            if (item.t === 'pt') data.pt--;
+            if (item.t === 'ast') data.ast--;
+            if (item.t === 'reb') data.reb--;
+            if (item.t === 'stl') data.stl--;
+            if (item.t === 'blk') data.blk--;
+            if (item.t === 'to') data.to--;
+            if (item.t === 'ft-m') { data.ftm--; data.fta--; }
+            if (item.t === 'ft-x') { data.fta--; }
+            
+            refresh();
+        }
+
+        function flash(id) {
+            var el = document.getElementById(id);
+            if(el) {
+                el.classList.add('flash-white');
+                setTimeout(function(){ el.classList.remove('flash-white'); }, 100);
+            }
+        }
+
+        function refresh() {
+            document.getElementById('pt-num').innerText = data.pt;
+            document.getElementById('pt-subtitle').innerText = "PAINT TOUCHES: " + data.pt;
+            document.getElementById('s-ast').innerText = data.ast;
+            document.getElementById('s-reb').innerText = data.reb;
+            document.getElementById('s-stl').innerText = data.stl;
+            document.getElementById('s-blk').innerText = data.blk;
+            document.getElementById('s-to').innerText = data.to;
+            document.getElementById('s-pts').innerText = data.pts;
+
+            var pct = data.fta > 0 ? Math.round((data.ftm / data.fta) * 100) : 0;
+            document.getElementById('ft-display').innerText = "Free Throw: " + pct + "% (" + data.ftm + "/" + data.fta + ")";
+
+            var g = "D";
+            var col = "orange";
+            if (raw >= 300) { g = "A+"; col = "#32d74b"; }
+            else if (raw >= 250) { g = "A"; col = "#32d74b"; }
+            else if (raw >= 180) { g = "B"; col = "orange"; }
+            else if (raw >= 100) { g = "C"; col = "orange"; }
+            
+            document.getElementById('grade').innerText = g;
+            document.getElementById('grade').style.color = col;
+        }
+
+        function save() {
+            if (raw === 0 && data.pts === 0) return;
+            var game = { d: new Date().toLocaleDateString(), g: document.getElementById('grade').innerText, p: data.pts };
+            var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
+            list.unshift(game);
+            localStorage.setItem('bball_logs', JSON.stringify(list));
+            reset();
+            showHistory();
+        }
+
+        function showHistory() {
+            var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
+            var out = list.map(function(i){
+                return "<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;'><span>"+i.d+"</span><span style='color:#32d74b; font-weight:bold;'>"+i.g+"</span><span>"+i.p+" PTS</span></div>";
+            }).join('');
+            document.getElementById('h-list').innerHTML = out || "No games yet.";
+        }
+
+        function reset() {
+            data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0 };
+            raw = 0; stack = [];
+            refresh();
+        }
+
+        showHistory();
+    </script>
+</body>
+</html>
