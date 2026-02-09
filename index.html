@@ -1,194 +1,178 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2487.3">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <style>
+        body { font-family: sans-serif; background: #000; color: #fff; text-align: center; margin: 0; padding-bottom: 50px; -webkit-tap-highlight-color: transparent; }
+        .header { background: #1a1a1a; padding: 15px; border-bottom: 2px solid #333; }
+        #grade { font-size: 70px; font-weight: bold; color: orange; margin: 0; line-height: 1; }
+        #total-points { font-size: 20px; margin-top: 5px; }
+
+        /* Updated to 4 columns since PNT is removed */
+        .stat-bar { display: grid; grid-template-columns: repeat(4, 1fr); background: #222; margin: 10px; padding: 10px; border-radius: 10px; font-size: 10px; }
+        .stat-val { font-size: 18px; font-weight: bold; display: block; color: #007aff; }
+        #ft-display { grid-column: span 4; color: #34c759; font-weight: bold; padding-top: 8px; border-top: 1px solid #333; margin-top: 8px; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
+        button { padding: 20px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 14px; background: #444; cursor: pointer; }
+        button:active { opacity: 0.5; transform: scale(0.95); }
+
+        .btn-green { background: #34c759; }
+        .btn-blue { background: #007aff; }
+        .btn-red { background: #ff3b30; }
+        .btn-purple { background: #5856d6; }
+        
+        #paint-touch { 
+            width: calc(100% - 20px); height: 140px; margin: 10px; 
+            background: #ff9500; color: #000; font-size: 24px; font-weight: bold;
+        }
+
+        .flash-white { background: #fff !important; color: #000 !important; }
+        .history { text-align: left; padding: 15px; background: #111; margin-top: 20px; border-radius: 10px; }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: sans-serif; background: #000; color: #fff; text-align: center; margin: 0; padding-bottom: 50px; -webkit-tap-highlight-color: transparent; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.header { background: #1a1a1a; padding: 15px; border-bottom: 2px solid #333; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#grade { font-size: 70px; font-weight: bold; color: orange; margin: 0; line-height: 1; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#total-points { font-size: 20px; margin-top: 5px; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Updated to 4 columns since PNT is removed */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.stat-bar { display: grid; grid-template-columns: repeat(4, 1fr); background: #222; margin: 10px; padding: 10px; border-radius: 10px; font-size: 10px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.stat-val { font-size: 18px; font-weight: bold; display: block; color: #007aff; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#ft-display { grid-column: span 4; color: #34c759; font-weight: bold; padding-top: 8px; border-top: 1px solid #333; margin-top: 8px; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>button { padding: 20px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 14px; background: #444; cursor: pointer; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>button:active { opacity: 0.5; transform: scale(0.95); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn-green { background: #34c759; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn-blue { background: #007aff; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn-red { background: #ff3b30; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn-purple { background: #5856d6; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>#paint-touch {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: calc(100% - 20px); height: 140px; margin: 10px;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #ff9500; color: #000; font-size: 24px; font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.flash-white { background: #fff !important; color: #000 !important; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.history { text-align: left; padding: 15px; background: #111; margin-top: 20px; border-radius: 10px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="header"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="grade"&gt;D&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="total-points"&gt;Points: 0&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat-bar"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;AST&lt;span id="s-ast" class="stat-val"&gt;0&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;REB&lt;span id="s-reb" class="stat-val"&gt;0&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;STL&lt;span id="s-stl" class="stat-val"&gt;0&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;TO&lt;span id="s-to" class="stat-val"&gt;0&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="ft-display"&gt;Free Throw: 0% (0/0)&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="grid"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="b-made" class="btn-green" onclick="handle('made', 1)"&gt;ADD 1 POINT&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-gray" onclick="handle('miss', -2)"&gt;MISSED SHOT&lt;/button&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-purple" onclick="handle('ft-m', 1)"&gt;FT MADE&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-gray" onclick="handle('ft-x', -1)"&gt;FT MISS&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-blue" onclick="handle('ast', 5)"&gt;ASSIST&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-blue" onclick="handle('stl', 3)"&gt;STEAL&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-blue" onclick="handle('reb', 3)"&gt;REBOUND&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-red" onclick="handle('to', -10)"&gt;TURNOVER&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="paint-touch" onclick="handle('pt', 10)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;span id="pt-num" style="font-size: 40px; display: block;"&gt;0&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>PAINT TOUCHES</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div style="display: flex; gap: 10px; padding: 10px;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button style="flex:1; background:#444;" onclick="undo()"&gt;UNDO&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button style="flex:1; background: #34c759; color: #000;" onclick="save()"&gt;SAVE GAME&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button style="flex:1; background:#444;" onclick="reset()"&gt;RESET&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="history"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="color: orange; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px;"&gt;Season History&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="h-list" style="font-size: 12px; padding-top: 10px;"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>var data = { pt: 0, ast: 0, reb: 0, stl: 0, to: 0, pts: 0, ftm: 0, fta: 0 };</p>
-<p class="p1"><span class="Apple-converted-space">        </span>var raw = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>var stack = [];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function handle(type, val) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>stack.push({t: type, v: val});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>raw += val;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'pt') data.pt++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'ast') data.ast++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'reb') data.reb++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'stl') data.stl++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'to') data.to++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'made') data.pts++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'ft-m') { data.pts++; data.ftm++; data.fta++; }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'ft-x') { data.fta++; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'made') flash('b-made');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (type === 'pt') flash('paint-touch');</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>refresh();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function undo() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (stack.length === 0) return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var item = stack.pop();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>raw -= item.v;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (item.t === 'pt') data.pt--;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (item.t === 'ast') data.ast--;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (item.t === 'reb') data.reb--;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (item.t === 'stl') data.stl--;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (item.t === 'to') data.to--;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (item.t === 'made') data.pts--;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (item.t === 'ft-m') { data.pts--; data.ftm--; data.fta--; }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (item.t === 'ft-x') { data.fta--; }</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>refresh();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function flash(id) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var el = document.getElementById(id);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if(el) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>el.classList.add('flash-white');</p>
-<p class="p1"><span class="Apple-converted-space">                </span>setTimeout(function(){ el.classList.remove('flash-white'); }, 100);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function refresh() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>// Updated UI calls - s-pt is gone from top bar</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('pt-num').innerText = data.pt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('s-ast').innerText = data.ast;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('s-reb').innerText = data.reb;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('s-stl').innerText = data.stl;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('s-to').innerText = data.to;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('total-points').innerText = "Points: " + data.pts;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>var pct = data.fta &gt; 0 ? Math.round((data.ftm / data.fta) * 100) : 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('ft-display').innerText = "Free Throw: " + pct + "% (" + data.ftm + "/" + data.fta + ")";</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>var g = "D";</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var col = "orange";</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (raw &gt;= 300) { g = "A+"; col = "#32d74b"; }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>else if (raw &gt;= 250) { g = "A"; col = "#32d74b"; }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>else if (raw &gt;= 180) { g = "B"; col = "orange"; }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>else if (raw &gt;= 100) { g = "C"; col = "orange"; }</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('grade').innerText = g;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('grade').style.color = col;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function save() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (raw === 0) return;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var game = { d: new Date().toLocaleDateString(), g: document.getElementById('grade').innerText, p: data.pts };</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");</p>
-<p class="p1"><span class="Apple-converted-space">            </span>list.unshift(game);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>localStorage.setItem('bball_logs', JSON.stringify(list));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>reset();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>showHistory();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function showHistory() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");</p>
-<p class="p1"><span class="Apple-converted-space">            </span>var out = list.map(function(i){</p>
-<p class="p1"><span class="Apple-converted-space">                </span>return "&lt;div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;'&gt;&lt;span&gt;"+i.d+"&lt;/span&gt;&lt;span style='color:#32d74b; font-weight:bold;'&gt;"+i.g+"&lt;/span&gt;&lt;span&gt;"+i.p+" PTS&lt;/span&gt;&lt;/div&gt;";</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}).join('');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById('h-list').innerHTML = out || "No games yet.";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function reset() {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>data = { pt: 0, ast: 0, reb: 0, stl: 0, to: 0, pts: 0, ftm: 0, fta: 0 };</p>
-<p class="p1"><span class="Apple-converted-space">            </span>raw = 0; stack = [];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>refresh();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>showHistory();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+    <div class="header">
+        <div id="grade">D</div>
+        <div id="total-points">Points: 0</div>
+    </div>
+
+    <div class="stat-bar">
+        <div>AST<span id="s-ast" class="stat-val">0</span></div>
+        <div>REB<span id="s-reb" class="stat-val">0</span></div>
+        <div>STL<span id="s-stl" class="stat-val">0</span></div>
+        <div>TO<span id="s-to" class="stat-val">0</span></div>
+        <div id="ft-display">Free Throw: 0% (0/0)</div>
+    </div>
+
+    <div class="grid">
+        <button id="b-made" class="btn-green" onclick="handle('made', 1)">ADD 1 POINT</button>
+        <button class="btn-gray" onclick="handle('miss', -2)">MISSED SHOT</button>
+        
+        <button class="btn-purple" onclick="handle('ft-m', 1)">FT MADE</button>
+        <button class="btn-gray" onclick="handle('ft-x', -1)">FT MISS</button>
+
+        <button class="btn-blue" onclick="handle('ast', 5)">ASSIST</button>
+        <button class="btn-blue" onclick="handle('stl', 3)">STEAL</button>
+        <button class="btn-blue" onclick="handle('reb', 3)">REBOUND</button>
+        <button class="btn-red" onclick="handle('to', -10)">TURNOVER</button>
+    </div>
+
+    <button id="paint-touch" onclick="handle('pt', 10)">
+        <span id="pt-num" style="font-size: 40px; display: block;">0</span>
+        PAINT TOUCHES
+    </button>
+
+    <div style="display: flex; gap: 10px; padding: 10px;">
+        <button style="flex:1; background:#444;" onclick="undo()">UNDO</button>
+        <button style="flex:1; background: #34c759; color: #000;" onclick="save()">SAVE GAME</button>
+        <button style="flex:1; background:#444;" onclick="reset()">RESET</button>
+    </div>
+
+    <div class="history">
+        <div style="color: orange; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px;">Season History</div>
+        <div id="h-list" style="font-size: 12px; padding-top: 10px;"></div>
+    </div>
+
+    <script>
+        var data = { pt: 0, ast: 0, reb: 0, stl: 0, to: 0, pts: 0, ftm: 0, fta: 0 };
+        var raw = 0;
+        var stack = [];
+
+        function handle(type, val) {
+            stack.push({t: type, v: val});
+            raw += val;
+
+            if (type === 'pt') data.pt++;
+            if (type === 'ast') data.ast++;
+            if (type === 'reb') data.reb++;
+            if (type === 'stl') data.stl++;
+            if (type === 'to') data.to++;
+            if (type === 'made') data.pts++;
+            if (type === 'ft-m') { data.pts++; data.ftm++; data.fta++; }
+            if (type === 'ft-x') { data.fta++; }
+
+            if (type === 'made') flash('b-made');
+            if (type === 'pt') flash('paint-touch');
+            
+            refresh();
+        }
+
+        function undo() {
+            if (stack.length === 0) return;
+            var item = stack.pop();
+            raw -= item.v;
+
+            if (item.t === 'pt') data.pt--;
+            if (item.t === 'ast') data.ast--;
+            if (item.t === 'reb') data.reb--;
+            if (item.t === 'stl') data.stl--;
+            if (item.t === 'to') data.to--;
+            if (item.t === 'made') data.pts--;
+            if (item.t === 'ft-m') { data.pts--; data.ftm--; data.fta--; }
+            if (item.t === 'ft-x') { data.fta--; }
+            
+            refresh();
+        }
+
+        function flash(id) {
+            var el = document.getElementById(id);
+            if(el) {
+                el.classList.add('flash-white');
+                setTimeout(function(){ el.classList.remove('flash-white'); }, 100);
+            }
+        }
+
+        function refresh() {
+            // Updated UI calls - s-pt is gone from top bar
+            document.getElementById('pt-num').innerText = data.pt;
+            document.getElementById('s-ast').innerText = data.ast;
+            document.getElementById('s-reb').innerText = data.reb;
+            document.getElementById('s-stl').innerText = data.stl;
+            document.getElementById('s-to').innerText = data.to;
+            document.getElementById('total-points').innerText = "Points: " + data.pts;
+
+            var pct = data.fta > 0 ? Math.round((data.ftm / data.fta) * 100) : 0;
+            document.getElementById('ft-display').innerText = "Free Throw: " + pct + "% (" + data.ftm + "/" + data.fta + ")";
+
+            var g = "D";
+            var col = "orange";
+            
+            if (raw >= 300) { g = "A+"; col = "#32d74b"; }
+            else if (raw >= 250) { g = "A"; col = "#32d74b"; }
+            else if (raw >= 180) { g = "B"; col = "orange"; }
+            else if (raw >= 100) { g = "C"; col = "orange"; }
+            
+            document.getElementById('grade').innerText = g;
+            document.getElementById('grade').style.color = col;
+        }
+
+        function save() {
+            if (raw === 0) return;
+            var game = { d: new Date().toLocaleDateString(), g: document.getElementById('grade').innerText, p: data.pts };
+            var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
+            list.unshift(game);
+            localStorage.setItem('bball_logs', JSON.stringify(list));
+            reset();
+            showHistory();
+        }
+
+        function showHistory() {
+            var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
+            var out = list.map(function(i){
+                return "<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;'><span>"+i.d+"</span><span style='color:#32d74b; font-weight:bold;'>"+i.g+"</span><span>"+i.p+" PTS</span></div>";
+            }).join('');
+            document.getElementById('h-list').innerHTML = out || "No games yet.";
+        }
+
+        function reset() {
+            data = { pt: 0, ast: 0, reb: 0, stl: 0, to: 0, pts: 0, ftm: 0, fta: 0 };
+            raw = 0; stack = [];
+            refresh();
+        }
+
+        showHistory();
+    </script>
 </body>
 </html>
