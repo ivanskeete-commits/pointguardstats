@@ -58,22 +58,22 @@
 
     <div class="grid">
         <button class="btn-green" onclick="handle('2m', 2, 4)">2PT MADE</button>
-        <button class="btn-gray" onclick="handle('2x', 0, -1)">2PT MISS</button>
+        <button class="btn-gray" onclick="handle('2x', 0, -2)">2PT MISS</button>
         
         <button class="btn-green" onclick="handle('3m', 3, 5)">3PT MADE</button>
-        <button class="btn-gray" onclick="handle('3x', 0, -1)">3PT MISS</button>
+        <button class="btn-gray" onclick="handle('3x', 0, -2)">3PT MISS</button>
 
         <button class="btn-purple" onclick="handle('ft-m', 1, 1)">FT MADE</button>
-        <button class="btn-gray" onclick="handle('ft-x', 0, -1)">FT MISS</button>
+        <button class="btn-gray" onclick="handle('ft-x', 0, -2)">FT MISS</button>
 
-        <button class="btn-blue" onclick="handle('ast', 0, 5)">ASSIST</button>
-        <button class="btn-blue" onclick="handle('stl', 0, 5)">STEAL</button>
-        <button class="btn-blue" onclick="handle('reb', 0, 3)">REBOUND</button>
-        <button class="btn-blue" onclick="handle('blk', 0, 5)">BLOCK</button>
-        <button class="btn-red" style="grid-column: span 2;" onclick="handle('to', 0, -6)">TURNOVER</button>
+        <button class="btn-blue" onclick="handle('ast', 0, 6)">ASSIST</button>
+        <button class="btn-blue" onclick="handle('stl', 0, 6)">STEAL</button>
+        <button class="btn-blue" onclick="handle('reb', 0, 4)">REBOUND</button>
+        <button class="btn-blue" onclick="handle('blk', 0, 6)">BLOCK</button>
+        <button class="btn-red" style="grid-column: span 2;" onclick="handle('to', 0, -7)">TURNOVER</button>
     </div>
 
-    <button id="paint-touch" onclick="handle('pt', 0, 12)">
+    <button id="paint-touch" onclick="handle('pt', 0, 13)">
         <span id="pt-num" style="font-size: 40px; display: block;">0</span>
         PAINT TOUCHES
     </button>
