@@ -7,30 +7,17 @@
         .header { background: #1a1a1a; padding: 15px; border-bottom: 2px solid #333; }
         #grade { font-size: 70px; font-weight: bold; color: orange; margin: 0; line-height: 1; }
         #pt-subtitle { font-size: 18px; color: #ff9500; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
-
         .stat-bar { display: grid; grid-template-columns: repeat(6, 1fr); background: #222; margin: 10px; padding: 10px; border-radius: 10px; font-size: 9px; }
         .stat-val { font-size: 16px; font-weight: bold; display: block; color: #007aff; }
-        
-        #percent-display { 
-            grid-column: span 6; color: #34c759; font-weight: bold; 
-            padding-top: 8px; border-top: 1px solid #333; margin-top: 8px; 
-            font-size: 9px; display: flex; justify-content: space-around;
-        }
-
+        #percent-display { grid-column: span 6; color: #34c759; font-weight: bold; padding-top: 8px; border-top: 1px solid #333; margin-top: 8px; font-size: 9px; display: flex; justify-content: space-around; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
         button { padding: 20px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 14px; background: #444; cursor: pointer; }
         button:active { opacity: 0.5; transform: scale(0.95); }
-
         .btn-green { background: #34c759; }
         .btn-blue { background: #007aff; }
         .btn-red { background: #ff3b30; }
         .btn-purple { background: #5856d6; }
-        
-        #paint-touch { 
-            width: calc(100% - 20px); height: 140px; margin: 10px; 
-            background: #ff9500; color: #000; font-size: 24px; font-weight: bold;
-        }
-
+        #paint-touch { width: calc(100% - 20px); height: 140px; margin: 10px; background: #ff9500; color: #000; font-size: 24px; font-weight: bold; }
         .flash-white { background: #fff !important; color: #000 !important; }
         .history { text-align: left; padding: 15px; background: #111; margin-top: 20px; border-radius: 10px; }
     </style>
@@ -59,14 +46,11 @@
     <div class="grid">
         <button class="btn-green" onclick="handle('2m', 2, 4)">2PT MADE</button>
         <button class="btn-gray" onclick="handle('2x', 0, -2)">2PT MISS</button>
-        
         <button class="btn-green" onclick="handle('3m', 3, 5)">3PT MADE</button>
         <button class="btn-gray" onclick="handle('3x', 0, -2)">3PT MISS</button>
-
         <button class="btn-purple" onclick="handle('ft-m', 1, 1)">FT MADE</button>
         <button class="btn-gray" onclick="handle('ft-x', 0, -2)">FT MISS</button>
-
-        <button class="btn-blue" onclick="handle('ast', 0, 6)">ASSIST</button>
+        <button class="btn-blue" onclick="handle('ast', 0, 7)">ASSIST</button>
         <button class="btn-blue" onclick="handle('stl', 0, 6)">STEAL</button>
         <button class="btn-blue" onclick="handle('reb', 0, 4)">REBOUND</button>
         <button class="btn-blue" onclick="handle('blk', 0, 6)">BLOCK</button>
@@ -98,22 +82,18 @@
             stack.push({t: type, p: ptVal, g: gradeVal});
             raw += gradeVal;
             data.pts += ptVal;
-
             if (type === 'pt') data.pt++;
             if (type === 'ast') data.ast++;
             if (type === 'reb') data.reb++;
             if (type === 'stl') data.stl++;
             if (type === 'blk') data.blk++;
             if (type === 'to') data.to++;
-            
             if (type === '2m') { data.fgm++; data.fga++; }
             if (type === '2x') { data.fga++; }
             if (type === '3m') { data.fgm++; data.fga++; data.tpm++; data.tpa++; }
             if (type === '3x') { data.fga++; data.tpa++; }
-            
             if (type === 'ft-m') { data.ftm++; data.fta++; }
             if (type === 'ft-x') { data.fta++; }
-
             if (type === 'pt') flash('paint-touch');
             refresh();
         }
@@ -123,22 +103,18 @@
             var item = stack.pop();
             raw -= item.g;
             data.pts -= item.p;
-
             if (item.t === 'pt') data.pt--;
             if (item.t === 'ast') data.ast--;
             if (item.t === 'reb') data.reb--;
             if (item.t === 'stl') data.stl--;
             if (item.t === 'blk') data.blk--;
             if (item.t === 'to') data.to--;
-            
             if (item.t === '2m') { data.fgm--; data.fga--; }
             if (item.t === '2x') { data.fga--; }
             if (item.t === '3m') { data.fgm--; data.fga--; data.tpm--; data.tpa--; }
             if (item.t === '3x') { data.fga--; data.tpa--; }
-            
             if (item.t === 'ft-m') { data.ftm--; data.fta--; }
             if (item.t === 'ft-x') { data.fta--; }
-            
             refresh();
         }
 
@@ -159,17 +135,14 @@
             document.getElementById('s-blk').innerText = data.blk;
             document.getElementById('s-to').innerText = data.to;
             document.getElementById('s-pts').innerText = data.pts;
-
             var fgPct = data.fga > 0 ? Math.round((data.fgm / data.fga) * 100) : 0;
             var tpPct = data.tpa > 0 ? Math.round((data.tpm / data.tpa) * 100) : 0;
             var ftPct = data.fta > 0 ? Math.round((data.ftm / data.fta) * 100) : 0;
-
             document.getElementById('percent-display').innerHTML = `
                 <span>FG: ${fgPct}% (${data.fgm}/${data.fga})</span>
                 <span>3PT: ${tpPct}% (${data.tpm}/${data.tpa})</span>
                 <span>FT: ${ftPct}% (${data.ftm}/${data.fta})</span>
             `;
-
             var g = "D";
             var col = "orange";
             if (raw >= 300) { g = "A+"; col = "#32d74b"; }
@@ -181,7 +154,6 @@
             else if (raw >= 130) { g = "C+"; col = "orange"; }
             else if (raw >= 100) { g = "C"; col = "orange"; }
             else if (raw >= 70) { g = "C-"; col = "orange"; }
-            
             document.getElementById('grade').innerText = g;
             document.getElementById('grade').style.color = col;
         }
@@ -209,7 +181,6 @@
             raw = 0; stack = [];
             refresh();
         }
-
         showHistory();
     </script>
 </body>
