@@ -20,9 +20,11 @@
         #paint-touch { width: calc(100% - 20px); height: 140px; margin: 10px; background: #ff9500; color: #000; font-size: 24px; font-weight: bold; }
         .flash-white { background: #fff !important; color: #000 !important; }
         .history { text-align: left; padding: 15px; background: #111; margin-top: 20px; border-radius: 10px; }
-        .history-item { border-bottom: 1px solid #222; padding: 10px 0; }
-        .history-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .history-item { border-bottom: 1px solid #222; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        .history-content { flex-grow: 1; }
+        .history-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; padding-right: 15px; }
         .history-stats { font-size: 10px; color: #888; letter-spacing: 0.5px; }
+        .del-btn { background: #333; color: #ff3b30; padding: 10px; border-radius: 8px; font-size: 12px; margin-left: 10px; }
     </style>
 </head>
 <body>
@@ -164,6 +166,7 @@
         function save() {
             if (raw === 0 && data.pts === 0) return;
             var game = { 
+                id: Date.now(), // Unique ID for deletion
                 d: new Date().toLocaleDateString(), 
                 g: document.getElementById('grade').innerText, 
                 p: data.pts,
@@ -181,19 +184,33 @@
             showHistory();
         }
 
+        function deleteGame(gameId) {
+            if (confirm("Delete this game from history?")) {
+                var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
+                var updatedList = list.filter(function(game) {
+                    return game.id !== gameId;
+                });
+                localStorage.setItem('bball_logs', JSON.stringify(updatedList));
+                showHistory();
+            }
+        }
+
         function showHistory() {
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             var out = list.map(function(i){
                 return `
                 <div class="history-item">
-                    <div class="history-main">
-                        <span>${i.d}</span>
-                        <span style="color:#32d74b; font-weight:bold;">${i.g}</span>
-                        <span>${i.p} PTS</span>
+                    <div class="history-content">
+                        <div class="history-main">
+                            <span>${i.d}</span>
+                            <span style="color:#32d74b; font-weight:bold;">${i.g}</span>
+                            <span>${i.p} PTS</span>
+                        </div>
+                        <div class="history-stats">
+                            ${i.pt} PT | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO
+                        </div>
                     </div>
-                    <div class="history-stats">
-                        ${i.pt} PT | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO
-                    </div>
+                    <button class="del-btn" onclick="deleteGame(${i.id})">X</button>
                 </div>`;
             }).join('');
             document.getElementById('h-list').innerHTML = out || "No games yet.";
