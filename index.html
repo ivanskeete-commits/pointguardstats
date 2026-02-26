@@ -1,187 +1,200 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Point Guard Stat Tracker</title>
     <style>
-        body { font-family: sans-serif; background: #000; color: #fff; text-align: center; margin: 0; padding-bottom: 50px; -webkit-tap-highlight-color: transparent; }
-        .header { background: #1a1a1a; padding: 15px; border-bottom: 2px solid #333; }
-        #grade { font-size: 70px; font-weight: bold; color: orange; margin: 0; line-height: 1; }
-        #pt-subtitle { font-size: 18px; color: #ff9500; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
-        .stat-bar { display: grid; grid-template-columns: repeat(6, 1fr); background: #222; margin: 10px; padding: 10px; border-radius: 10px; font-size: 9px; }
-        .stat-val { font-size: 16px; font-weight: bold; display: block; color: #007aff; }
-        #percent-display { grid-column: span 6; color: #34c759; font-weight: bold; padding-top: 8px; border-top: 1px solid #333; margin-top: 8px; font-size: 9px; display: flex; justify-content: space-around; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; }
-        button { padding: 20px; border-radius: 12px; border: none; color: white; font-weight: bold; font-size: 14px; background: #444; cursor: pointer; }
-        button:active { opacity: 0.5; transform: scale(0.95); }
-        .btn-green { background: #34c759; }
-        .btn-blue { background: #007aff; }
-        .btn-red { background: #ff3b30; }
-        .btn-purple { background: #5856d6; }
-        #paint-touch { width: calc(100% - 20px); height: 140px; margin: 10px; background: #ff9500; color: #000; font-size: 24px; font-weight: bold; }
-        .flash-white { background: #fff !important; color: #000 !important; }
-        .history { text-align: left; padding: 15px; background: #111; margin-top: 20px; border-radius: 10px; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 { text-align: center; color: #ff9800; }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #3d3d3d;
+            border-radius: 8px;
+        }
+        .stat-name { font-weight: bold; font-size: 1.1em; }
+        .controls { display: flex; align-items: center; gap: 15px; }
+        button {
+            background-color: #ff9800;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:active { background-color: #e68a00; }
+        .grade-section {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            border-top: 2px solid #444;
+        }
+        #grade-display {
+            font-size: 3em;
+            font-weight: bold;
+            color: #4caf50;
+        }
+        .history-section {
+            margin-top: 30px;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #444;
+            font-size: 0.9em;
+        }
+        th { color: #ff9800; }
+        .save-btn {
+            width: 100%;
+            background-color: #4caf50;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div id="grade">D</div>
-        <div id="pt-subtitle">PAINT TOUCHES: 0</div>
-    </div>
+<div class="container">
+    <h1>PG Tracker</h1>
 
-    <div class="stat-bar">
-        <div>PTS<span id="s-pts" class="stat-val">0</span></div>
-        <div>AST<span id="s-ast" class="stat-val">0</span></div>
-        <div>REB<span id="s-reb" class="stat-val">0</span></div>
-        <div>STL<span id="s-stl" class="stat-val">0</span></div>
-        <div>BLK<span id="s-blk" class="stat-val">0</span></div>
-        <div>TO<span id="s-to" class="stat-val">0</span></div>
-        <div id="percent-display">
-            <span>FG: 0% (0/0)</span>
-            <span>3PT: 0% (0/0)</span>
-            <span>FT: 0% (0/0)</span>
+    <div class="stat-row">
+        <span class="stat-name">Paint Touches</span>
+        <div class="controls">
+            <button onclick="changeStat('paintTouches', -1)">-</button>
+            <span id="paintTouches">0</span>
+            <button onclick="changeStat('paintTouches', 1)">+</button>
         </div>
     </div>
 
-    <div class="grid">
-        <button class="btn-green" onclick="handle('2m', 2, 4)">2PT MADE</button>
-        <button class="btn-gray" onclick="handle('2x', 0, -2)">2PT MISS</button>
-        <button class="btn-green" onclick="handle('3m', 3, 5)">3PT MADE</button>
-        <button class="btn-gray" onclick="handle('3x', 0, -2)">3PT MISS</button>
-        <button class="btn-purple" onclick="handle('ft-m', 1, 1)">FT MADE</button>
-        <button class="btn-gray" onclick="handle('ft-x', 0, -2)">FT MISS</button>
-        <button class="btn-blue" onclick="handle('ast', 0, 7)">ASSIST</button>
-        <button class="btn-blue" onclick="handle('stl', 0, 6)">STEAL</button>
-        <button class="btn-blue" onclick="handle('reb', 0, 4)">REBOUND</button>
-        <button class="btn-blue" onclick="handle('blk', 0, 6)">BLOCK</button>
-        <button class="btn-red" style="grid-column: span 2;" onclick="handle('to', 0, -7)">TURNOVER</button>
+    <div class="stat-row">
+        <span class="stat-name">Points</span>
+        <div class="controls">
+            <button onclick="changeStat('points', -1)">-</button>
+            <span id="points">0</span>
+            <button onclick="changeStat('points', 1)">+</button>
+        </div>
     </div>
 
-    <button id="paint-touch" onclick="handle('pt', 0, 13)">
-        <span id="pt-num" style="font-size: 40px; display: block;">0</span>
-        PAINT TOUCHES
-    </button>
-
-    <div style="display: flex; gap: 10px; padding: 10px;">
-        <button style="flex:1; background:#444;" onclick="undo()">UNDO</button>
-        <button style="flex:1; background: #34c759; color: #000;" onclick="save()">SAVE GAME</button>
-        <button style="flex:1; background:#444;" onclick="reset()">RESET</button>
+    <div class="stat-row">
+        <span class="stat-name">Assists</span>
+        <div class="controls">
+            <button onclick="changeStat('assists', -1)">-</button>
+            <span id="assists">0</span>
+            <button onclick="changeStat('assists', 1)">+</button>
+        </div>
     </div>
 
-    <div class="history">
-        <div style="color: orange; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px;">Season History</div>
-        <div id="h-list" style="font-size: 12px; padding-top: 10px;"></div>
+    <div class="stat-row">
+        <span class="stat-name">Rebounds</span>
+        <div class="controls">
+            <button onclick="changeStat('rebounds', -1)">-</button>
+            <span id="rebounds">0</span>
+            <button onclick="changeStat('rebounds', 1)">+</button>
+        </div>
     </div>
 
-    <script>
-        var data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0, fgm: 0, fga: 0, tpm: 0, tpa: 0 };
-        var raw = 0;
-        var stack = [];
+    <div class="grade-section">
+        <div>Performance Grade</div>
+        <div id="grade-display">C</div>
+        <button class="save-btn" onclick="saveGame()">Save Game to History</button>
+    </div>
 
-        function handle(type, ptVal, gradeVal) {
-            stack.push({t: type, p: ptVal, g: gradeVal});
-            raw += gradeVal;
-            data.pts += ptVal;
-            if (type === 'pt') data.pt++;
-            if (type === 'ast') data.ast++;
-            if (type === 'reb') data.reb++;
-            if (type === 'stl') data.stl++;
-            if (type === 'blk') data.blk++;
-            if (type === 'to') data.to++;
-            if (type === '2m') { data.fgm++; data.fga++; }
-            if (type === '2x') { data.fga++; }
-            if (type === '3m') { data.fgm++; data.fga++; data.tpm++; data.tpa++; }
-            if (type === '3x') { data.fga++; data.tpa++; }
-            if (type === 'ft-m') { data.ftm++; data.fta++; }
-            if (type === 'ft-x') { data.fta++; }
-            if (type === 'pt') flash('paint-touch');
-            refresh();
-        }
+    <div class="history-section">
+        <h3>Season History</h3>
+        <table id="history-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Full Stat Line (PT-P-A-R)</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody id="history-body">
+                </tbody>
+        </table>
+    </div>
+</div>
 
-        function undo() {
-            if (stack.length === 0) return;
-            var item = stack.pop();
-            raw -= item.g;
-            data.pts -= item.p;
-            if (item.t === 'pt') data.pt--;
-            if (item.t === 'ast') data.ast--;
-            if (item.t === 'reb') data.reb--;
-            if (item.t === 'stl') data.stl--;
-            if (item.t === 'blk') data.blk--;
-            if (item.t === 'to') data.to--;
-            if (item.t === '2m') { data.fgm--; data.fga--; }
-            if (item.t === '2x') { data.fga--; }
-            if (item.t === '3m') { data.fgm--; data.fga--; data.tpm--; data.tpa--; }
-            if (item.t === '3x') { data.fga--; data.tpa--; }
-            if (item.t === 'ft-m') { data.ftm--; data.fta--; }
-            if (item.t === 'ft-x') { data.fta--; }
-            refresh();
-        }
+<script>
+    let stats = {
+        paintTouches: 0,
+        points: 0,
+        assists: 0,
+        rebounds: 0
+    };
 
-        function flash(id) {
-            var el = document.getElementById(id);
-            if(el) {
-                el.classList.add('flash-white');
-                setTimeout(function(){ el.classList.remove('flash-white'); }, 100);
-            }
-        }
+    function changeStat(stat, amount) {
+        stats[stat] = Math.max(0, stats[stat] + amount);
+        document.getElementById(stat).innerText = stats[stat];
+        calculateGrade();
+    }
 
-        function refresh() {
-            document.getElementById('pt-num').innerText = data.pt;
-            document.getElementById('pt-subtitle').innerText = "PAINT TOUCHES: " + data.pt;
-            document.getElementById('s-ast').innerText = data.ast;
-            document.getElementById('s-reb').innerText = data.reb;
-            document.getElementById('s-stl').innerText = data.stl;
-            document.getElementById('s-blk').innerText = data.blk;
-            document.getElementById('s-to').innerText = data.to;
-            document.getElementById('s-pts').innerText = data.pts;
-            var fgPct = data.fga > 0 ? Math.round((data.fgm / data.fga) * 100) : 0;
-            var tpPct = data.tpa > 0 ? Math.round((data.tpm / data.tpa) * 100) : 0;
-            var ftPct = data.fta > 0 ? Math.round((data.ftm / data.fta) * 100) : 0;
-            document.getElementById('percent-display').innerHTML = `
-                <span>FG: ${fgPct}% (${data.fgm}/${data.fga})</span>
-                <span>3PT: ${tpPct}% (${data.tpm}/${data.tpa})</span>
-                <span>FT: ${ftPct}% (${data.ftm}/${data.fta})</span>
-            `;
-            var g = "D";
-            var col = "orange";
-            if (raw >= 300) { g = "A+"; col = "#32d74b"; }
-            else if (raw >= 275) { g = "A"; col = "#32d74b"; }
-            else if (raw >= 250) { g = "A-"; col = "#32d74b"; }
-            else if (raw >= 220) { g = "B+"; col = "orange"; }
-            else if (raw >= 190) { g = "B"; col = "orange"; }
-            else if (raw >= 160) { g = "B-"; col = "orange"; }
-            else if (raw >= 130) { g = "C+"; col = "orange"; }
-            else if (raw >= 100) { g = "C"; col = "orange"; }
-            else if (raw >= 70) { g = "C-"; col = "orange"; }
-            document.getElementById('grade').innerText = g;
-            document.getElementById('grade').style.color = col;
-        }
+    function calculateGrade() {
+        const pt = stats.paintTouches;
+        let grade = "D";
+        let color = "#f44336";
 
-        function save() {
-            if (raw === 0 && data.pts === 0) return;
-            var game = { d: new Date().toLocaleDateString(), g: document.getElementById('grade').innerText, p: data.pts };
-            var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
-            list.unshift(game);
-            localStorage.setItem('bball_logs', JSON.stringify(list));
-            reset();
-            showHistory();
-        }
+        if (pt >= 15) { grade = "A+"; color = "#gold"; }
+        else if (pt >= 12) { grade = "A"; color = "#4caf50"; }
+        else if (pt >= 10) { grade = "B"; color = "#8bc34a"; }
+        else if (pt >= 7) { grade = "C"; color = "#ffeb3b"; }
+        
+        const display = document.getElementById('grade-display');
+        display.innerText = grade;
+        display.style.color = color;
+    }
 
-        function showHistory() {
-            var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
-            var out = list.map(function(i){
-                return "<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;'><span>"+i.d+"</span><span style='color:#32d74b; font-weight:bold;'>"+i.g+"</span><span>"+i.p+" PTS</span></div>";
-            }).join('');
-            document.getElementById('h-list').innerHTML = out || "No games yet.";
-        }
+    function saveGame() {
+        const tableBody = document.getElementById('history-body');
+        const date = new Date().toLocaleDateString();
+        const grade = document.getElementById('grade-display').innerText;
+        
+        // Create the full stat line string
+        const statLine = `${stats.paintTouches} PT | ${stats.points} PTS | ${stats.assists} AST | ${stats.rebounds} REB`;
 
-        function reset() {
-            data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0, fgm: 0, fga: 0, tpm: 0, tpa: 0 };
-            raw = 0; stack = [];
-            refresh();
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${date}</td>
+            <td>${statLine}</td>
+            <td>${grade}</td>
+        `;
+
+        tableBody.prepend(row);
+
+        // Reset stats for next game
+        for (let key in stats) {
+            stats[key] = 0;
+            document.getElementById(key).innerText = 0;
         }
-        showHistory();
-    </script>
+        calculateGrade();
+    }
+</script>
+
 </body>
 </html>
