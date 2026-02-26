@@ -20,6 +20,9 @@
         #paint-touch { width: calc(100% - 20px); height: 140px; margin: 10px; background: #ff9500; color: #000; font-size: 24px; font-weight: bold; }
         .flash-white { background: #fff !important; color: #000 !important; }
         .history { text-align: left; padding: 15px; background: #111; margin-top: 20px; border-radius: 10px; }
+        .history-item { border-bottom: 1px solid #222; padding: 10px 0; }
+        .history-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .history-stats { font-size: 10px; color: #888; letter-spacing: 0.5px; }
     </style>
 </head>
 <body>
@@ -160,7 +163,17 @@
 
         function save() {
             if (raw === 0 && data.pts === 0) return;
-            var game = { d: new Date().toLocaleDateString(), g: document.getElementById('grade').innerText, p: data.pts };
+            var game = { 
+                d: new Date().toLocaleDateString(), 
+                g: document.getElementById('grade').innerText, 
+                p: data.pts,
+                pt: data.pt,
+                ast: data.ast,
+                reb: data.reb,
+                stl: data.stl,
+                blk: data.blk,
+                to: data.to
+            };
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             list.unshift(game);
             localStorage.setItem('bball_logs', JSON.stringify(list));
@@ -171,7 +184,17 @@
         function showHistory() {
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             var out = list.map(function(i){
-                return "<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #222;'><span>"+i.d+"</span><span style='color:#32d74b; font-weight:bold;'>"+i.g+"</span><span>"+i.p+" PTS</span></div>";
+                return `
+                <div class="history-item">
+                    <div class="history-main">
+                        <span>${i.d}</span>
+                        <span style="color:#32d74b; font-weight:bold;">${i.g}</span>
+                        <span>${i.p} PTS</span>
+                    </div>
+                    <div class="history-stats">
+                        ${i.pt} PT | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO
+                    </div>
+                </div>`;
             }).join('');
             document.getElementById('h-list').innerHTML = out || "No games yet.";
         }
