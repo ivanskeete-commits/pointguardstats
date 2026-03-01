@@ -27,6 +27,11 @@
         .action-btns { display: flex; gap: 5px; }
         .del-btn { background: #333; color: #ff3b30; padding: 10px; border-radius: 8px; font-size: 11px; }
         .copy-btn { background: #333; color: #007aff; padding: 10px; border-radius: 8px; font-size: 11px; }
+        
+        /* New Game Result Styles */
+        .game-result-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 10px 10px 10px; }
+        #win-loss-btn { background: #333; font-size: 16px; border: 1px solid #444; }
+        #score-input { background: #222; border: 1px solid #444; border-radius: 12px; color: #fff; font-size: 18px; font-weight: bold; text-align: center; height: 55px; }
     </style>
 </head>
 <body>
@@ -69,6 +74,11 @@
         PAINT TOUCHES
     </button>
 
+    <div class="game-result-row">
+        <button id="win-loss-btn" onclick="toggleWL()">W / L</button>
+        <input type="text" id="score-input" placeholder="FINAL SCORE" inputmode="text">
+    </div>
+
     <div style="display: flex; gap: 10px; padding: 10px;">
         <button style="flex:1; background:#444;" onclick="undo()">UNDO</button>
         <button style="flex:1; background: #34c759; color: #000;" onclick="save()">SAVE GAME</button>
@@ -84,6 +94,22 @@
         var data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0, fgm: 0, fga: 0, tpm: 0, tpa: 0 };
         var raw = 0;
         var stack = [];
+        var winLoss = "N/A";
+
+        function toggleWL() {
+            var btn = document.getElementById('win-loss-btn');
+            if (winLoss === "N/A" || winLoss === "LOSS") {
+                winLoss = "WIN";
+                btn.innerText = "WIN";
+                btn.style.background = "#34c759";
+                btn.style.color = "#000";
+            } else {
+                winLoss = "LOSS";
+                btn.innerText = "LOSS";
+                btn.style.background = "#ff3b30";
+                btn.style.color = "#fff";
+            }
+        }
 
         function handle(type, ptVal, gradeVal) {
             stack.push({t: type, p: ptVal, g: gradeVal});
@@ -167,6 +193,7 @@
 
         function save() {
             if (raw === 0 && data.pts === 0) return;
+            var finalScore = document.getElementById('score-input').value || "N/A";
             var game = { 
                 id: Date.now(), 
                 d: new Date().toLocaleDateString(), 
@@ -177,7 +204,9 @@
                 reb: data.reb,
                 stl: data.stl,
                 blk: data.blk,
-                to: data.to
+                to: data.to,
+                wl: winLoss,
+                score: finalScore
             };
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             list.unshift(game);
@@ -201,7 +230,7 @@
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             var game = list.find(g => g.id === gameId);
             if (game) {
-                var text = `Date: ${game.d} | Grade: ${game.g} | Paint Touches: ${game.pt} | PTS: ${game.p} | AST: ${game.ast} | REB: ${game.reb} | STL: ${game.stl} | BLK: ${game.blk} | TO: ${game.to}`;
+                var text = `Date: ${game.d} | Result: ${game.wl} (${game.score}) | Grade: ${game.g} | Paint Touches: ${game.pt} | PTS: ${game.p} | AST: ${game.ast} | REB: ${game.reb} | STL: ${game.stl} | BLK: ${game.blk} | TO: ${game.to}`;
                 navigator.clipboard.writeText(text).then(() => {
                     var oldText = btn.innerText;
                     btn.innerText = "COPIED!";
@@ -213,16 +242,17 @@
         function showHistory() {
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             var out = list.map(function(i){
+                var wlCol = i.wl === "WIN" ? "#32d74b" : (i.wl === "LOSS" ? "#ff3b30" : "#888");
                 return `
                 <div class="history-item">
                     <div class="history-content">
                         <div class="history-main">
-                            <span>${i.d}</span>
+                            <span>${i.d} <span style="color:${wlCol}; font-size:10px; margin-left:5px;">${i.wl}</span></span>
                             <span style="color:#32d74b; font-weight:bold;">${i.g}</span>
                             <span>${i.pt} Paint Touches</span>
                         </div>
                         <div class="history-stats">
-                            ${i.p} PTS | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO
+                            SCORE: ${i.score} | ${i.p} PTS | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO
                         </div>
                     </div>
                     <div class="action-btns">
@@ -237,6 +267,11 @@
         function reset() {
             data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0, fgm: 0, fga: 0, tpm: 0, tpa: 0 };
             raw = 0; stack = [];
+            winLoss = "N/A";
+            document.getElementById('win-loss-btn').innerText = "W / L";
+            document.getElementById('win-loss-btn').style.background = "#333";
+            document.getElementById('win-loss-btn').style.color = "#fff";
+            document.getElementById('score-input').value = "";
             refresh();
         }
         showHistory();
