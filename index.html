@@ -30,9 +30,9 @@
         .del-btn { background: #333; color: #ff3b30; padding: 10px; border-radius: 8px; font-size: 11px; }
         .copy-btn { background: #333; color: #007aff; padding: 10px; border-radius: 8px; font-size: 11px; }
         
-        .game-result-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 10px 10px 10px; }
-        #win-loss-btn { background: #333; font-size: 16px; border: 1px solid #444; }
-        #score-input { background: #222; border: 1px solid #444; border-radius: 12px; color: #fff; font-size: 18px; font-weight: bold; text-align: center; height: 55px; }
+        .game-info-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 8px; padding: 0 10px 10px 10px; }
+        #win-loss-btn { background: #333; font-size: 14px; border: 1px solid #444; height: 55px; }
+        .input-box { background: #222; border: 1px solid #444; border-radius: 12px; color: #fff; font-size: 14px; font-weight: bold; text-align: center; height: 55px; width: 100%; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -75,9 +75,10 @@
         PAINT TOUCHES
     </button>
 
-    <div class="game-result-row">
+    <div class="game-info-grid">
+        <input type="text" id="opp-input" class="input-box" placeholder="OPPONENT" inputmode="text">
         <button id="win-loss-btn" onclick="toggleWL()">W / L</button>
-        <input type="text" id="score-input" placeholder="FINAL SCORE" inputmode="text">
+        <input type="text" id="score-input" class="input-box" placeholder="SCORE" inputmode="text">
     </div>
 
     <div style="display: flex; gap: 10px; padding: 10px;">
@@ -194,8 +195,10 @@
 
         function save() {
             var scoreInput = document.getElementById('score-input').value.trim();
-            if (winLoss === "N/A" || scoreInput === "") {
-                alert("HOLD UP! Please set the WIN/LOSS result and Final Score before saving.");
+            var oppInput = document.getElementById('opp-input').value.trim();
+
+            if (winLoss === "N/A" || scoreInput === "" || oppInput === "") {
+                alert("MISSING DATA: Please set Opponent, W/L, and Score before saving.");
                 return; 
             }
             if (raw === 0 && data.pts === 0) return;
@@ -212,7 +215,7 @@
                 fgh: fgPct, fga: data.fga, fgm: data.fgm,
                 tph: tpPct, tpa: data.tpa, tpm: data.tpm,
                 fth: ftPct, fta: data.fta, ftm: data.ftm,
-                wl: winLoss, score: scoreInput
+                wl: winLoss, score: scoreInput, opp: oppInput
             };
             
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
@@ -223,7 +226,7 @@
         }
 
         function deleteGame(gameId) {
-            if (confirm("Delete this game from history?")) {
+            if (confirm("Delete this game?")) {
                 var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
                 var updatedList = list.filter(function(game) { return game.id !== gameId; });
                 localStorage.setItem('bball_logs', JSON.stringify(updatedList));
@@ -235,7 +238,7 @@
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             var game = list.find(g => g.id === gameId);
             if (game) {
-                var text = `Date: ${game.d} | Grade: ${game.g} | Paint Touches: ${game.pt} | PTS: ${game.p} | AST: ${game.ast} | REB: ${game.reb} | STL: ${game.stl} | BLK: ${game.blk} | TO: ${game.to} | FG: ${game.fgh}% (${game.fgm}/${game.fga}) | 3PT: ${game.tph}% (${game.tpm}/${game.tpa}) | FT: ${game.fth}% (${game.ftm}/${game.fta}) | Result: ${game.wl} (${game.score})`;
+                var text = `Date: ${game.d} vs ${game.opp} | Grade: ${game.g} | PT: ${game.pt} | PTS: ${game.p} | AST: ${game.ast} | REB: ${game.reb} | STL: ${game.stl} | BLK: ${game.blk} | TO: ${game.to} | FG: ${game.fgh}% (${game.fgm}/${game.fga}) | 3PT: ${game.tph}% (${game.tpm}/${game.tpa}) | FT: ${game.fth}% (${game.ftm}/${game.fta}) | Result: ${game.wl} (${game.score})`;
                 navigator.clipboard.writeText(text).then(() => {
                     var oldText = btn.innerText;
                     btn.innerText = "COPIED!";
@@ -252,9 +255,9 @@
                 <div class="history-item">
                     <div class="history-content">
                         <div class="history-main">
-                            <span>${i.d}</span>
+                            <span>${i.d} <b>vs ${i.opp}</b></span>
                             <span style="color:#32d74b; font-weight:bold;">${i.g}</span>
-                            <span>${i.pt} Paint Touches</span>
+                            <span>${i.pt} PT</span>
                         </div>
                         <div class="history-stats">
                             ${i.p} PTS | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO
@@ -282,6 +285,7 @@
             document.getElementById('win-loss-btn').style.background = "#333";
             document.getElementById('win-loss-btn').style.color = "#fff";
             document.getElementById('score-input').value = "";
+            document.getElementById('opp-input').value = "";
             refresh();
         }
         showHistory();
