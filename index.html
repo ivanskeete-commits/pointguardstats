@@ -23,7 +23,7 @@
         .history-item { border-bottom: 1px solid #222; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
         .history-content { flex-grow: 1; }
         .history-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; padding-right: 15px; }
-        .history-stats { font-size: 8px; color: #888; letter-spacing: 0.4px; margin-bottom: 2px; }
+        .history-stats { font-size: 8px; color: #888; letter-spacing: 0.3px; margin-bottom: 2px; }
         .history-result { font-size: 10px; font-weight: bold; letter-spacing: 0.5px; }
         .action-btns { display: flex; gap: 5px; }
         .del-btn { background: #333; color: #ff3b30; padding: 10px; border-radius: 8px; font-size: 11px; }
@@ -193,13 +193,10 @@
 
         function save() {
             var scoreInput = document.getElementById('score-input').value.trim();
-            
-            // Validation Check
             if (winLoss === "N/A" || scoreInput === "") {
                 alert("HOLD UP! Please set the WIN/LOSS result and Final Score before saving.");
                 return; 
             }
-
             if (raw === 0 && data.pts === 0) return;
             
             var fgPct = data.fga > 0 ? Math.round((data.fgm / data.fga) * 100) : 0;
@@ -259,7 +256,7 @@
                             <span>${i.pt} Paint Touches</span>
                         </div>
                         <div class="history-stats">
-                            ${i.p} PTS | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO | FG: ${i.fgh}% | 3PT: ${i.tph}% | FT: ${i.fth}%
+                            ${i.p} PTS | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO | FG: ${i.fgh}% (${i.fgm}/${i.fga}) | 3PT: ${i.tph}% (${i.tpm}/${i.tpa}) | FT: ${i.fth}% (${i.ftm}/${i.fta})
                         </div>
                         <div class="history-result" style="color:${wlCol};">
                             RESULT: ${i.wl} (${i.score})
