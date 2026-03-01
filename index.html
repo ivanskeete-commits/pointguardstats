@@ -202,12 +202,13 @@
             }
             if (raw === 0 && data.pts === 0) return;
             
-            // FORMATED DATE: Feb. 3, 2026
+            // Explicit Manual Formatting: Feb. 3, 2026
+            var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var now = new Date();
-            var month = now.toLocaleDateString('en-US', { month: 'short' });
-            var day = now.getDate();
-            var year = now.getFullYear();
-            var formattedDate = month + ". " + day + ", " + year;
+            var monthStr = months[now.getMonth()];
+            var dayNum = now.getDate();
+            var yearNum = now.getFullYear();
+            var formattedDate = monthStr + ". " + dayNum + ", " + yearNum;
 
             var fgPct = data.fga > 0 ? Math.round((data.fgm / data.fga) * 100) : 0;
             var tpPct = data.tpa > 0 ? Math.round((data.tpm / data.tpa) * 100) : 0;
