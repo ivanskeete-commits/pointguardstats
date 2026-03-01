@@ -25,7 +25,7 @@
         .history-main { font-size: 13px; margin-bottom: 4px; padding-right: 15px; }
         .history-stats { font-size: 9px; color: #888; letter-spacing: 0.3px; margin-bottom: 2px; }
         .history-shooting { font-size: 9px; color: #34c759; letter-spacing: 0.3px; margin-bottom: 2px; font-weight: 500; }
-        .history-result { font-size: 10px; font-weight: bold; letter-spacing: 0.5px; display: flex; justify-content: flex-start; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .history-result { font-size: 9px; font-weight: bold; letter-spacing: -0.1px; display: flex; justify-content: flex-start; gap: 6px; flex-wrap: wrap; align-items: center; }
         .action-btns { display: flex; gap: 5px; }
         .del-btn { background: #333; color: #ff3b30; padding: 10px; border-radius: 8px; font-size: 11px; }
         .copy-btn { background: #333; color: #007aff; padding: 10px; border-radius: 8px; font-size: 11px; }
@@ -201,12 +201,20 @@
                 return; 
             }
             if (raw === 0 && data.pts === 0) return;
+            
+            // FORMATED DATE: Feb. 3, 2026
+            var now = new Date();
+            var month = now.toLocaleDateString('en-US', { month: 'short' });
+            var day = now.getDate();
+            var year = now.getFullYear();
+            var formattedDate = month + ". " + day + ", " + year;
+
             var fgPct = data.fga > 0 ? Math.round((data.fgm / data.fga) * 100) : 0;
             var tpPct = data.tpa > 0 ? Math.round((data.tpm / data.tpa) * 100) : 0;
             var ftPct = data.fta > 0 ? Math.round((data.ftm / data.fta) * 100) : 0;
             var game = { 
                 id: Date.now(), 
-                d: new Date().toLocaleDateString(), 
+                d: formattedDate, 
                 g: document.getElementById('grade').innerText, 
                 p: data.pts, pt: data.pt, ast: data.ast, reb: data.reb, stl: data.stl, blk: data.blk, to: data.to,
                 fgh: fgPct, fga: data.fga, fgm: data.fgm,
