@@ -192,11 +192,20 @@
         }
 
         function save() {
+            var scoreInput = document.getElementById('score-input').value.trim();
+            
+            // Validation Check
+            if (winLoss === "N/A" || scoreInput === "") {
+                alert("HOLD UP! Please set the WIN/LOSS result and Final Score before saving.");
+                return; 
+            }
+
             if (raw === 0 && data.pts === 0) return;
+            
             var fgPct = data.fga > 0 ? Math.round((data.fgm / data.fga) * 100) : 0;
             var tpPct = data.tpa > 0 ? Math.round((data.tpm / data.tpa) * 100) : 0;
             var ftPct = data.fta > 0 ? Math.round((data.ftm / data.fta) * 100) : 0;
-            var finalScore = document.getElementById('score-input').value || "N/A";
+            
             var game = { 
                 id: Date.now(), 
                 d: new Date().toLocaleDateString(), 
@@ -205,8 +214,9 @@
                 fgh: fgPct, fga: data.fga, fgm: data.fgm,
                 tph: tpPct, tpa: data.tpa, tpm: data.tpm,
                 fth: ftPct, fta: data.fta, ftm: data.ftm,
-                wl: winLoss, score: finalScore
+                wl: winLoss, score: scoreInput
             };
+            
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             list.unshift(game);
             localStorage.setItem('bball_logs', JSON.stringify(list));
