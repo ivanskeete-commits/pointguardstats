@@ -276,4 +276,15 @@
         }
 
         function reset() {
-            data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0, fgm: 0, fga: 0, tpm: 0, tpa:
+            data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0, fgm: 0, fga: 0, tpm: 0, tpa: 0 };
+            raw = 0; stack = []; winLoss = "N/A";
+            document.getElementById('win-loss-btn').innerText = "W / L";
+            document.getElementById('win-loss-btn').style.background = "#333";
+            document.getElementById('win-loss-btn').style.color = "#fff";
+            document.getElementById('score-input').value = "";
+            refresh();
+        }
+        showHistory();
+    </script>
+</body>
+</html>
