@@ -22,10 +22,10 @@
         .history { text-align: left; padding: 15px; background: #111; margin-top: 20px; border-radius: 10px; }
         .history-item { border-bottom: 1px solid #222; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
         .history-content { flex-grow: 1; }
-        .history-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; padding-right: 15px; }
+        .history-main { font-size: 13px; margin-bottom: 4px; padding-right: 15px; }
         .history-stats { font-size: 9px; color: #888; letter-spacing: 0.3px; margin-bottom: 2px; }
         .history-shooting { font-size: 9px; color: #34c759; letter-spacing: 0.3px; margin-bottom: 2px; font-weight: 500; }
-        .history-result { font-size: 10px; font-weight: bold; letter-spacing: 0.5px; }
+        .history-result { font-size: 10px; font-weight: bold; letter-spacing: 0.5px; display: flex; justify-content: flex-start; gap: 8px; flex-wrap: wrap; align-items: center; }
         .action-btns { display: flex; gap: 5px; }
         .del-btn { background: #333; color: #ff3b30; padding: 10px; border-radius: 8px; font-size: 11px; }
         .copy-btn { background: #333; color: #007aff; padding: 10px; border-radius: 8px; font-size: 11px; }
@@ -251,9 +251,7 @@
                 <div class="history-item">
                     <div class="history-content">
                         <div class="history-main">
-                            <span>${i.d} <b>vs ${i.opp}</b></span>
-                            <span style="color:#32d74b; font-weight:bold;">${i.g}</span>
-                            <span style="font-size: 8px;">${i.pt} Paint Touches</span>
+                            ${i.d} <b>vs ${i.opp}</b>
                         </div>
                         <div class="history-stats">
                             ${i.p} PTS | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO
@@ -261,8 +259,12 @@
                         <div class="history-shooting">
                             FG: ${i.fgh}% (${i.fgm}/${i.fga}) | 3PT: ${i.tph}% (${i.tpm}/${i.tpa}) | FT: ${i.fth}% (${i.ftm}/${i.fta})
                         </div>
-                        <div class="history-result" style="color:${wlCol};">
-                            RESULT: ${i.wl} (${i.score})
+                        <div class="history-result">
+                            <span style="color:${wlCol};">RESULT: ${i.wl} (${i.score})</span>
+                            <span style="color:#888;">|</span>
+                            <span style="color:#32d74b; font-weight:bold;">Grade: ${i.g}</span>
+                            <span style="color:#888;">|</span>
+                            <span style="color:#ff9500;">${i.pt} Paint Touches</span>
                         </div>
                     </div>
                     <div class="action-btns">
