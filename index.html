@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <style>
-        body { font-family: sans-serif; background: #000; color: #fff; text-align: center; margin: 0; padding-bottom: 50px; -webkit-tap-highlight-color: transparent; }
+        body { font-family: sans-serif; background: #000; color: #fff; text-align: center; margin: 0; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
         .header { background: #1a1a1a; padding: 15px; border-bottom: 2px solid #333; }
         #grade { font-size: 70px; font-weight: bold; color: orange; margin: 0; line-height: 1; }
         #pt-subtitle { font-size: 18px; color: #ff9500; font-weight: bold; margin-top: 5px; text-transform: uppercase; }
@@ -33,6 +33,7 @@
         .game-info-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 8px; padding: 0 10px 10px 10px; }
         #win-loss-btn { background: #333; font-size: 14px; border: 1px solid #444; height: 55px; }
         .input-box { background: #222; border: 1px solid #444; border-radius: 12px; color: #fff; font-size: 14px; font-weight: bold; text-align: center; height: 55px; width: 100%; box-sizing: border-box; }
+        #version-tag { font-size: 10px; color: #333; margin-top: 30px; text-align: center; }
     </style>
 </head>
 <body>
@@ -91,6 +92,8 @@
         <div style="color: orange; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px;">Season History</div>
         <div id="h-list" style="font-size: 12px; padding-top: 10px;"></div>
     </div>
+
+    <div id="version-tag">Code Version 3.0 (Mar 1 Fix Applied)</div>
 
     <script>
         var data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0, fgm: 0, fga: 0, tpm: 0, tpa: 0 };
@@ -202,7 +205,7 @@
             }
             if (raw === 0 && data.pts === 0) return;
             
-            // Explicit Manual Formatting: Feb. 3, 2026
+            // MANUAL DATE FORMATTING
             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var now = new Date();
             var monthStr = months[now.getMonth()];
