@@ -84,7 +84,7 @@
     <div style="display: flex; gap: 10px; padding: 10px;">
         <button style="flex:1; background:#444;" onclick="undo()">UNDO</button>
         <button style="flex:1; background: #34c759; color: #000;" onclick="save()">SAVE GAME</button>
-        <button style="flex:1; background:#444;" onclick="reset()">RESET</button>
+        <button style="flex:1; background:#444;" onclick="confirmReset()">RESET</button>
     </div>
 
     <div class="history">
@@ -97,6 +97,13 @@
         var raw = 0;
         var stack = [];
         var winLoss = "N/A";
+
+        // BROWSER REFRESH GUARD
+        window.onbeforeunload = function() {
+            if (stack.length > 0) {
+                return "You have unsaved stats! Are you sure you want to leave?";
+            }
+        };
 
         function toggleWL() {
             var btn = document.getElementById('win-loss-btn');
@@ -202,7 +209,6 @@
             }
             if (raw === 0 && data.pts === 0) return;
             
-            // FINAL DATE LOCK: Feb. 3, 2026
             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var now = new Date();
             var monthStr = months[now.getMonth()];
@@ -226,6 +232,9 @@
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             list.unshift(game);
             localStorage.setItem('bball_logs', JSON.stringify(list));
+            
+            // Wipe stack manually so guard doesn't trigger
+            stack = []; 
             reset();
             showHistory();
         }
@@ -283,6 +292,16 @@
                 </div>`;
             }).join('');
             document.getElementById('h-list').innerHTML = out || "No games yet.";
+        }
+
+        function confirmReset() {
+            if (stack.length === 0) {
+                reset();
+                return;
+            }
+            if (confirm("CLEAR ALL LIVE STATS? This cannot be undone.")) {
+                reset();
+            }
         }
 
         function reset() {
