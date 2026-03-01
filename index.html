@@ -33,7 +33,6 @@
         .game-info-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 8px; padding: 0 10px 10px 10px; }
         #win-loss-btn { background: #333; font-size: 14px; border: 1px solid #444; height: 55px; }
         .input-box { background: #222; border: 1px solid #444; border-radius: 12px; color: #fff; font-size: 14px; font-weight: bold; text-align: center; height: 55px; width: 100%; box-sizing: border-box; }
-        #version-tag { font-size: 10px; color: #333; margin-top: 30px; text-align: center; }
     </style>
 </head>
 <body>
@@ -92,8 +91,6 @@
         <div style="color: orange; font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px;">Season History</div>
         <div id="h-list" style="font-size: 12px; padding-top: 10px;"></div>
     </div>
-
-    <div id="version-tag">Code Version 3.0 (Mar 1 Fix Applied)</div>
 
     <script>
         var data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0, fgm: 0, fga: 0, tpm: 0, tpa: 0 };
@@ -205,7 +202,7 @@
             }
             if (raw === 0 && data.pts === 0) return;
             
-            // MANUAL DATE FORMATTING
+            // FINAL DATE LOCK: Feb. 3, 2026
             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
             var now = new Date();
             var monthStr = months[now.getMonth()];
