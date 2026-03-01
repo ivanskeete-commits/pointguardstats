@@ -23,7 +23,7 @@
         .history-item { border-bottom: 1px solid #222; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
         .history-content { flex-grow: 1; }
         .history-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; padding-right: 15px; }
-        .history-stats { font-size: 9px; color: #888; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .history-stats { font-size: 8px; color: #888; letter-spacing: 0.4px; margin-bottom: 2px; }
         .history-result { font-size: 10px; font-weight: bold; letter-spacing: 0.5px; }
         .action-btns { display: flex; gap: 5px; }
         .del-btn { background: #333; color: #ff3b30; padding: 10px; border-radius: 8px; font-size: 11px; }
@@ -193,20 +193,19 @@
 
         function save() {
             if (raw === 0 && data.pts === 0) return;
+            var fgPct = data.fga > 0 ? Math.round((data.fgm / data.fga) * 100) : 0;
+            var tpPct = data.tpa > 0 ? Math.round((data.tpm / data.tpa) * 100) : 0;
+            var ftPct = data.fta > 0 ? Math.round((data.ftm / data.fta) * 100) : 0;
             var finalScore = document.getElementById('score-input').value || "N/A";
             var game = { 
                 id: Date.now(), 
                 d: new Date().toLocaleDateString(), 
                 g: document.getElementById('grade').innerText, 
-                p: data.pts,
-                pt: data.pt,
-                ast: data.ast,
-                reb: data.reb,
-                stl: data.stl,
-                blk: data.blk,
-                to: data.to,
-                wl: winLoss,
-                score: finalScore
+                p: data.pts, pt: data.pt, ast: data.ast, reb: data.reb, stl: data.stl, blk: data.blk, to: data.to,
+                fgh: fgPct, fga: data.fga, fgm: data.fgm,
+                tph: tpPct, tpa: data.tpa, tpm: data.tpm,
+                fth: ftPct, fta: data.fta, ftm: data.ftm,
+                wl: winLoss, score: finalScore
             };
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             list.unshift(game);
@@ -218,9 +217,7 @@
         function deleteGame(gameId) {
             if (confirm("Delete this game from history?")) {
                 var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
-                var updatedList = list.filter(function(game) {
-                    return game.id !== gameId;
-                });
+                var updatedList = list.filter(function(game) { return game.id !== gameId; });
                 localStorage.setItem('bball_logs', JSON.stringify(updatedList));
                 showHistory();
             }
@@ -230,7 +227,7 @@
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             var game = list.find(g => g.id === gameId);
             if (game) {
-                var text = `Date: ${game.d} | Grade: ${game.g} | Paint Touches: ${game.pt} | PTS: ${game.p} | AST: ${game.ast} | REB: ${game.reb} | STL: ${game.stl} | BLK: ${game.blk} | TO: ${game.to} | Result: ${game.wl} (${game.score})`;
+                var text = `Date: ${game.d} | Grade: ${game.g} | Paint Touches: ${game.pt} | PTS: ${game.p} | AST: ${game.ast} | REB: ${game.reb} | STL: ${game.stl} | BLK: ${game.blk} | TO: ${game.to} | FG: ${game.fgh}% (${game.fgm}/${game.fga}) | 3PT: ${game.tph}% (${game.tpm}/${game.tpa}) | FT: ${game.fth}% (${game.ftm}/${game.fta}) | Result: ${game.wl} (${game.score})`;
                 navigator.clipboard.writeText(text).then(() => {
                     var oldText = btn.innerText;
                     btn.innerText = "COPIED!";
@@ -252,7 +249,7 @@
                             <span>${i.pt} Paint Touches</span>
                         </div>
                         <div class="history-stats">
-                            ${i.p} PTS | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO
+                            ${i.p} PTS | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO | FG: ${i.fgh}% | 3PT: ${i.tph}% | FT: ${i.fth}%
                         </div>
                         <div class="history-result" style="color:${wlCol};">
                             RESULT: ${i.wl} (${i.score})
@@ -269,8 +266,7 @@
 
         function reset() {
             data = { pt: 0, ast: 0, reb: 0, stl: 0, blk: 0, to: 0, pts: 0, ftm: 0, fta: 0, fgm: 0, fga: 0, tpm: 0, tpa: 0 };
-            raw = 0; stack = [];
-            winLoss = "N/A";
+            raw = 0; stack = []; winLoss = "N/A";
             document.getElementById('win-loss-btn').innerText = "W / L";
             document.getElementById('win-loss-btn').style.background = "#333";
             document.getElementById('win-loss-btn').style.color = "#fff";
