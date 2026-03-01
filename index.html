@@ -196,17 +196,14 @@
         function save() {
             var scoreInput = document.getElementById('score-input').value.trim();
             var oppInput = document.getElementById('opp-input').value.trim();
-
             if (winLoss === "N/A" || scoreInput === "" || oppInput === "") {
                 alert("MISSING DATA: Please set Opponent, W/L, and Score before saving.");
                 return; 
             }
             if (raw === 0 && data.pts === 0) return;
-            
             var fgPct = data.fga > 0 ? Math.round((data.fgm / data.fga) * 100) : 0;
             var tpPct = data.tpa > 0 ? Math.round((data.tpm / data.tpa) * 100) : 0;
             var ftPct = data.fta > 0 ? Math.round((data.ftm / data.fta) * 100) : 0;
-            
             var game = { 
                 id: Date.now(), 
                 d: new Date().toLocaleDateString(), 
@@ -217,7 +214,6 @@
                 fth: ftPct, fta: data.fta, ftm: data.ftm,
                 wl: winLoss, score: scoreInput, opp: oppInput
             };
-            
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             list.unshift(game);
             localStorage.setItem('bball_logs', JSON.stringify(list));
@@ -238,7 +234,7 @@
             var list = JSON.parse(localStorage.getItem('bball_logs') || "[]");
             var game = list.find(g => g.id === gameId);
             if (game) {
-                var text = `Date: ${game.d} vs ${game.opp} | Grade: ${game.g} | PT: ${game.pt} | PTS: ${game.p} | AST: ${game.ast} | REB: ${game.reb} | STL: ${game.stl} | BLK: ${game.blk} | TO: ${game.to} | FG: ${game.fgh}% (${game.fgm}/${game.fga}) | 3PT: ${game.tph}% (${game.tpm}/${game.tpa}) | FT: ${game.fth}% (${game.ftm}/${game.fta}) | Result: ${game.wl} (${game.score})`;
+                var text = `Date: ${game.d} vs ${game.opp} | Grade: ${game.g} | Paint Touches: ${game.pt} | PTS: ${game.p} | AST: ${game.ast} | REB: ${game.reb} | STL: ${game.stl} | BLK: ${game.blk} | TO: ${game.to} | FG: ${game.fgh}% (${game.fgm}/${game.fga}) | 3PT: ${game.tph}% (${game.tpm}/${game.tpa}) | FT: ${game.fth}% (${game.ftm}/${game.fta}) | Result: ${game.wl} (${game.score})`;
                 navigator.clipboard.writeText(text).then(() => {
                     var oldText = btn.innerText;
                     btn.innerText = "COPIED!";
@@ -257,7 +253,7 @@
                         <div class="history-main">
                             <span>${i.d} <b>vs ${i.opp}</b></span>
                             <span style="color:#32d74b; font-weight:bold;">${i.g}</span>
-                            <span>${i.pt} PT</span>
+                            <span style="font-size: 8px;">${i.pt} Paint Touches</span>
                         </div>
                         <div class="history-stats">
                             ${i.p} PTS | ${i.ast} AST | ${i.reb} REB | ${i.stl} STL | ${i.blk} BLK | ${i.to} TO
