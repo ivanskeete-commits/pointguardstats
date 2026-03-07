@@ -76,9 +76,9 @@
     </button>
 
     <div class="game-info-grid">
-        <input type="text" id="opp-input" class="input-box" placeholder="OPPONENT" inputmode="text">
+        <input type="text" id="opp-input" class="input-box" placeholder="OPPONENT" inputmode="text" oninput="silentSave()">
         <button id="win-loss-btn" onclick="toggleWL()">W / L</button>
-        <input type="text" id="score-input" class="input-box" placeholder="SCORE" inputmode="text">
+        <input type="text" id="score-input" class="input-box" placeholder="SCORE" inputmode="text" oninput="silentSave()">
     </div>
 
     <div style="display: flex; gap: 10px; padding: 10px;">
@@ -98,24 +98,64 @@
         var stack = [];
         var winLoss = "N/A";
 
-        // BROWSER REFRESH GUARD
-        window.onbeforeunload = function() {
-            if (stack.length > 0) {
-                return "You have unsaved stats! Are you sure you want to leave?";
-            }
+        // AUTO-LOAD DATA ON STARTUP
+        window.onload = function() {
+            loadDraft();
+            showHistory();
         };
 
+        function silentSave() {
+            var draft = {
+                data: data,
+                raw: raw,
+                stack: stack,
+                winLoss: winLoss,
+                opp: document.getElementById('opp-input').value,
+                score: document.getElementById('score-input').value
+            };
+            localStorage.setItem('current_bball_draft', JSON.stringify(draft));
+        }
+
+        function loadDraft() {
+            var saved = localStorage.getItem('current_bball_draft');
+            if (saved) {
+                var draft = JSON.parse(saved);
+                data = draft.data;
+                raw = draft.raw;
+                stack = draft.stack;
+                winLoss = draft.winLoss;
+                document.getElementById('opp-input').value = draft.opp || "";
+                document.getElementById('score-input').value = draft.score || "";
+                
+                // Update UI to match loaded Win/Loss
+                updateWLUI();
+                refresh();
+            }
+        }
+
         function toggleWL() {
-            var btn = document.getElementById('win-loss-btn');
             if (winLoss === "N/A" || winLoss === "LOSS") {
                 winLoss = "WIN";
+            } else {
+                winLoss = "LOSS";
+            }
+            updateWLUI();
+            silentSave();
+        }
+
+        function updateWLUI() {
+            var btn = document.getElementById('win-loss-btn');
+            if (winLoss === "WIN") {
                 btn.innerText = "WIN";
                 btn.style.background = "#34c759";
                 btn.style.color = "#000";
-            } else {
-                winLoss = "LOSS";
+            } else if (winLoss === "LOSS") {
                 btn.innerText = "LOSS";
                 btn.style.background = "#ff3b30";
+                btn.style.color = "#fff";
+            } else {
+                btn.innerText = "W / L";
+                btn.style.background = "#333";
                 btn.style.color = "#fff";
             }
         }
@@ -138,6 +178,7 @@
             if (type === 'ft-x') { data.fta++; }
             if (type === 'pt') flash('paint-touch');
             refresh();
+            silentSave();
         }
 
         function undo() {
@@ -158,6 +199,7 @@
             if (item.t === 'ft-m') { data.ftm--; data.fta--; }
             if (item.t === 'ft-x') { data.fta--; }
             refresh();
+            silentSave();
         }
 
         function flash(id) {
@@ -233,8 +275,8 @@
             list.unshift(game);
             localStorage.setItem('bball_logs', JSON.stringify(list));
             
-            // Wipe stack manually so guard doesn't trigger
-            stack = []; 
+            // Clear draft and reset
+            localStorage.removeItem('current_bball_draft');
             reset();
             showHistory();
         }
@@ -300,6 +342,7 @@
                 return;
             }
             if (confirm("CLEAR ALL LIVE STATS? This cannot be undone.")) {
+                localStorage.removeItem('current_bball_draft');
                 reset();
             }
         }
@@ -314,7 +357,6 @@
             document.getElementById('opp-input').value = "";
             refresh();
         }
-        showHistory();
     </script>
 </body>
 </html>
